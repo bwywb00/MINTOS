@@ -20,4 +20,5 @@ typedef struct kCharactorStruct
 } CHARACTER;
 
 #pragma pack(pop)
+
 #endif /* __TYPES_H__ */
