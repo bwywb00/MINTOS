@@ -43,11 +43,11 @@ $(ENTRYPOINTOBJECTFILE): $(ENTRYPOINTSOURCEFILE)
 	$(NASM64) -o $@ $<
 
 InternalDependency:
-	$(GCC64) -MM $(CSOURCEFILES) > Dependancy.dep
+	$(GCC64) -MM $(CSOURCEFILES) > Dependency.dep
 
 Kernel64.elf: $(ENTRYPOINTOBJECTFILE) $(COBJECTFILES) $(ASSEMBLYOBJECTFILES)
 	$(LD64) -o $@ $^
 
-ifeq (Dependancy.dep, $(wildcard Dependancy.dep))
-include Dependancy.dep
+ifeq (Dependency.dep, $(wildcard Dependency.dep))
+include Dependency.dep
 endif
