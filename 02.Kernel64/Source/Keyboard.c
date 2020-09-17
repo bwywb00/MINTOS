@@ -1,5 +1,3 @@
-#include "Types.h"
-#include "AssemblyUtility.h"
 #include "Keyboard.h"
 
 BOOL kIsOutputBufferFull(void)
