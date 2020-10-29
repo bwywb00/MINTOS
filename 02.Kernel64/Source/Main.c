@@ -5,6 +5,8 @@
 #include "Console.h"
 #include "ConsoleShell.h"
 #include "Utility.h"
+#include "Task.h"
+#include "PIT.h"
 
 void kPrintString(int iX, int iY, const char *pcString);
 
@@ -15,57 +17,62 @@ void Main(void)
 
     kInitializeConsole(0, 10);
     kPrintf("Switch To IA-32e Mode Success~!!\n");
-    kPrintf("IA-32e C Language Kernel Start..............[Pass]\n");
-    kPrintf("Initialize Console..........................[Pass]\n");
+    kPrintf("IA-32e C Language Kernel Start...............[Pass]\n");
+    kPrintf("Initialize Console...........................[Pass]\n");
 
     kGetCursor(&iCursorX, &iCursorY);
-    kPrintf("GDT Initialize And Switch For IA-32e Mode...[    ]");
+    kPrintf("GDT Initialize And Switch For IA-32e Mode....[    ]");
     kInitializeGDTTableAndTSS();
     kLoadGDTR(GDTR_STARTADDRESS);
 
-    kSetCursor(45, iCursorY++);
+    kSetCursor(46, iCursorY++);
     kPrintf("Pass\n");
 
-    kPrintf("TSS Segment Load............................[    ]");
+    kPrintf("TSS Segment Load.............................[    ]");
     kLoadTR(GDT_TSSSEGMENT);
 
-    kSetCursor(45, iCursorY++);
+    kSetCursor(46, iCursorY++);
     kPrintf("Pass\n");
 
-    kPrintf("IDT Initialize..............................[    ]");
+    kPrintf("IDT Initialize...............................[    ]");
     kInitializeIDTTables();
     kLoadIDTR(IDTR_STARTADDRESS);
 
-    kSetCursor(45, iCursorY++);
+    kSetCursor(46, iCursorY++);
     kPrintf("Pass\n");
 
-    kPrintf("Total RAM Size Check........................[    ]");
+    kPrintf("Total RAM Size Check.........................[    ]");
     kCheckTotalRAMSize();
-    kSetCursor(45, iCursorY++);
+    kSetCursor(46, iCursorY++);
     kPrintf("Pass], Size = %d MB\n", kGetTotalRAMSize());
 
-    kPrintf("Keyboard Activate And Queue Initialize......[    ]");
+    kPrintf("TCB Pool And Scheduler Initialize............[Pass]\n");
+    iCursorY++;
+    kInitializeScheduler();
+    kInitializePIT(MSTOCOUNT(1), 1);
+
+    kPrintf("Keyboard Activate And Queue Initialize.......[    ]");
 
     if (kInitializeKeyboard() == TRUE)
     {
-        kSetCursor(45, iCursorY++);
+        kSetCursor(46, iCursorY++);
         kPrintf("Pass\n");
         kChangeKeyboardLED(FALSE, FALSE, FALSE);
     }
     else
     {
-        kSetCursor(45, iCursorY++);
+        kSetCursor(46, iCursorY++);
         kPrintf("Fail\n");
         while (1)
             ;
     }
 
-    kPrintf("PIC Controller And Interrupt Initialize.....[    ]");
+    kPrintf("PIC Controller And Interrupt Initialize......[    ]");
     kInitializePIC();
     kMaskPICInterrupt(0);
     kEnableInterrupt();
 
-    kSetCursor(45, iCursorY++);
+    kSetCursor(46, iCursorY++);
     kPrintf("Pass\n");
 
     kStartConsoleShell();
