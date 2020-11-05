@@ -3,7 +3,7 @@
 global kInPortByte, kOutPortByte, kLoadGDTR, kLoadTR, kLoadIDTR
 global kEnableInterrupt, kDisableInterrupt, kReadRFLAGS
 global kReadTSC
-global kSwitchContext
+global kSwitchContext, kHlt
 
 SECTION .text
 
@@ -166,3 +166,8 @@ kSwitchContext:
     
     KLOADCONTEXT
     iretq
+
+kHlt:
+    hlt
+    hlt
+    ret
