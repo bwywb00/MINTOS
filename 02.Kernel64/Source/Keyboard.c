@@ -1,6 +1,7 @@
 #include "Keyboard.h"
 #include "Queue.h"
 #include "Utility.h"
+#include "Synchronization.h"
 
 BOOL kIsOutputBufferFull(void)
 {
@@ -483,11 +484,11 @@ BOOL kConvertScanCodeAndPutQueue(BYTE bScanCode)
 
     if (kConvertScanCodeToASCIICode(bScanCode, &(stData.bASCIICode), &(stData.bFlags)) == TRUE)
     {
-        bPreviousInterrupt = kSetInterruptFlag(FALSE);
+        bPreviousInterrupt = kLockForSystemData();
 
         bResult = kPutQueue(&gs_stKeyQUEUE, &stData);
 
-        kSetInterruptFlag(bPreviousInterrupt);
+        kUnlockForSystemData( bPreviousInterrupt );
     }
 
     return bResult;
@@ -503,11 +504,11 @@ BOOL kGetKeyFromKeyQueue(KEYDATA *pstData)
         return FALSE;
     }
 
-    bPreviousInterrupt = kSetInterruptFlag(FALSE);
+    bPreviousInterrupt = kLockForSystemData();
 
     bResult = kGetQueue(&gs_stKeyQUEUE, pstData);
 
-    kSetInterruptFlag(bPreviousInterrupt);
+    kUnlockForSystemData( bPreviousInterrupt );
 
     return bResult;
 }
